@@ -5,35 +5,35 @@
 #include <max6675.h>
 
 // Multi-use setup variables
-int CLK = 13; // Arduino static clock pin
+const int CLK = 13; // Arduino static clock pin
 
 // Display - Set the LCD address to 0x27, 20 and 4 for 20x4 display
 LiquidCrystal_I2C lcd(0x27,20,4);
 
 // Button setup variables
-int btnPin = 3; // Encoder - Button pin
-int DT = 4;  // Encoder - DT pin (determines direction of rotation)
+const int btnPin = 3; // Encoder - Button pin
+const int DT = 4;  // Encoder - DT pin (determines direction of rotation)
 BfButton btn(BfButton::STANDALONE_DIGITAL, btnPin, true, LOW); // BfButton instance, from ButtonFever documentation
 int aState;
 int aLastState;
 
 // Thermocouple setup
-int thermoDO = 12;
-int thermo0CS = 6;
-int thermo1CS = 5;
+const int thermoDO = 12;
+const int thermo0CS = 6;
+const int thermo1CS = 5;
 
 MAX6675 thermocouple0(CLK, thermo0CS, thermoDO);
 MAX6675 thermocouple1(CLK, thermo1CS, thermoDO);
 
 // Hot Light setup
-int LEDPin = 11;
+const int LEDPin = 11;
 bool heaterOn = false;
 
 // Menu vars
 String line0, line1, line2, line3;
 int selection, selMin, selMax, currentMenu;
 bool refresh = false; // Some menus, like temps, need to be refreshed to show current data
-int refreshRate = 3000; // When refresh is set, the menu will reprint every refreshRate ms, lower number equals faster refresh
+const int refreshRate = 3000; // When refresh is set, the menu will reprint every refreshRate ms, lower number equals faster refresh
 unsigned long time = 0; // Keeps track of time passed for millis() comparison at refreshRate intervals
 
 // Menu enum
