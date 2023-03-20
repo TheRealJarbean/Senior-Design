@@ -25,6 +25,10 @@ int thermo1CS = 5;
 MAX6675 thermocouple0(CLK, thermo0CS, thermoDO);
 MAX6675 thermocouple1(CLK, thermo1CS, thermoDO);
 
+// Hot Light setup
+int LEDPin = 11;
+bool heaterOn = false;
+
 // Menu vars
 String line0, line1, line2, line3;
 int selection, selMin, selMax, currentMenu;
@@ -48,10 +52,15 @@ void selectOption();
 void MenuHome () {
     line0 = "--------------------";
     line1 = "  Temps";
-    line2 = "";
+    if (heaterOn) {
+      line2 = "  Turn heater off";
+    }
+    else {
+      line2 = "  Turn heater on";
+    }
     line3 = "--------------------";
     selMin = 1;
-    selMax = 1;
+    selMax = 2;
     selection = 1;
 }
 
@@ -62,8 +71,8 @@ void MenuTemps () {
     line1 = "   Temp1: " + String(temp1) + char(0xDF) + "C";
     line2 = "     Avg: " + String((temp0 + temp1) / 2) + char(0xDF) + "C";
     line3 = "  Back";
-    selMin = 1;
-    selMax = 1;
+    selMin = 3;
+    selMax = 3;
     selection = 3;
 }
 
@@ -146,6 +155,16 @@ void selectOption() {
         printMenu(TEMPS);
         refresh = true;
       }
+      if (selection == 2) {
+        heaterOn = !heaterOn;
+        if (heaterOn) {
+          digitalWrite(11, HIGH); // Turn hot light on
+        }
+        else {
+          digitalWrite(11, LOW); // Turn hot light off
+        }
+        printMenu(HOME);
+      }
       break;
 
     case TEMPS:
@@ -168,6 +187,9 @@ void setup() {
   btn.onPress(pressHandler)
   .onDoublePress(pressHandler)     // default timeout
   .onPressFor(pressHandler, 1000); // custom timeout for 1 second
+
+  // Set LED control pin to output
+  pinMode(11, OUTPUT);
 
   // Startup on home menu
   printMenu(HOME);
