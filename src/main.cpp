@@ -11,30 +11,30 @@ const int CLK = 13; // Arduino static clock pin
 LiquidCrystal_I2C lcd(0x27,20,4);
 
 // Button setup variables
-const int btnPin = 3; // Encoder - Button pin
+const int BTN_PIN = 3; // Encoder - Button pin
 const int DT = 4;  // Encoder - DT pin (determines direction of rotation)
-BfButton btn(BfButton::STANDALONE_DIGITAL, btnPin, true, LOW); // BfButton instance, from ButtonFever documentation
+BfButton btn(BfButton::STANDALONE_DIGITAL, BTN_PIN, true, LOW); // BfButton instance, from ButtonFever documentation
 int aState;
 int aLastState;
 
 // Thermocouple setup
-const int thermoDO = 12;
-const int thermo0CS = 6;
-const int thermo1CS = 5;
+const int THERMO_DO = 12;
+const int THERMO_CS_0 = 6;
+const int THERMO_CS_1 = 5;
 
-MAX6675 thermocouple0(CLK, thermo0CS, thermoDO);
-MAX6675 thermocouple1(CLK, thermo1CS, thermoDO);
+MAX6675 thermocouple0(CLK, THERMO_CS_0, THERMO_DO);
+MAX6675 thermocouple1(CLK, THERMO_CS_1, THERMO_DO);
 
 // Hot Light setup
-const int LEDPin = 11;
+const int LED_PIN = 11;
 bool heaterOn = false;
 
 // Menu vars
 String line0, line1, line2, line3;
 int selection, selMin, selMax, currentMenu;
 bool refresh = false; // Some menus, like temps, need to be refreshed to show current data
-const int refreshRate = 3000; // When refresh is set, the menu will reprint every refreshRate ms, lower number equals faster refresh
-unsigned long time = 0; // Keeps track of time passed for millis() comparison at refreshRate intervals
+const int REFRESH_RATE = 3000; // When refresh is set, the menu will reprint every REFRESH_RATE ms, lower number equals faster refresh
+unsigned long time = 0; // Keeps track of time passed for millis() comparison at REFRESH_RATE intervals
 
 // Menu enum
 enum menu {
@@ -216,8 +216,8 @@ void loop() {
   aLastState = aState;
 
   // Reprint menu if refresh is true
-  if (millis() >= time + refreshRate) {
-    time += refreshRate;
+  if (millis() >= time + REFRESH_RATE) {
+    time += REFRESH_RATE;
     if (refresh) {
       Serial.println("Refreshing menu!");
       printMenu(currentMenu);
