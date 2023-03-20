@@ -33,7 +33,8 @@ bool heaterOn = false;
 String line0, line1, line2, line3;
 int selection, selMin, selMax, currentMenu;
 bool refresh = false; // Some menus, like temps, need to be refreshed to show current data
-const int REFRESH_RATE = 3000; // When refresh is set, the menu will reprint every REFRESH_RATE ms, lower number equals faster refresh
+const int REFRESH_RATE = 3000; // When refresh is set, the menu will reprint every REFRESH_RATE ms,
+                               // lower number equals faster refresh
 unsigned long time = 0; // Keeps track of time passed for millis() comparison at REFRESH_RATE intervals
 
 // Menu enum
@@ -46,9 +47,8 @@ enum menu {
 void setSelection(int sel);
 void selectOption();
 
-// Menus are derivatives of a base menu class
-// A menu must have a value for each of the four lines
-// on the display
+// Menu that is used to navigate to other menus, start
+// heating operations, returned to by default in most cases
 void MenuHome () {
     line0 = "--------------------";
     line1 = "  Temps";
@@ -64,6 +64,8 @@ void MenuHome () {
     selection = 1;
 }
 
+// Menu that shows current temperatures of both sensors,
+// avg temp, and option to go back to home menu
 void MenuTemps () {
     float temp0 = thermocouple0.readCelsius();
     float temp1 = thermocouple1.readCelsius();
@@ -122,6 +124,9 @@ void setSelection(int sel) {
   selection = sel;
 }
 
+// Shifts selection on current screen up or down
+// shift == -1 : Move cursor up 1 or wrap around
+// shift == 1  : Move cursor down 1 or wrap around
 void cycleSelection(int shift) {
   lcd.setCursor(0, selection);
   lcd.print(" ");
@@ -148,6 +153,9 @@ void cycleSelection(int shift) {
   lcd.print("*");
 }
 
+// Contains options for all menus
+// Selection refers to row that is currently selected
+// Ensure that selection number matches corresponding menu line
 void selectOption() {
   switch(currentMenu) {
     case HOME:
@@ -197,8 +205,8 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  
   btn.read();
-
   aState = digitalRead(CLK);
 
   // Encoder rotation tracking
@@ -215,9 +223,9 @@ void loop() {
   aState = digitalRead(CLK);
   aLastState = aState;
 
-  // Reprint menu if refresh is true
   if (millis() >= time + REFRESH_RATE) {
     time += REFRESH_RATE;
+    // Reprint menu if refresh is true
     if (refresh) {
       Serial.println("Refreshing menu!");
       printMenu(currentMenu);
