@@ -10,6 +10,9 @@ const int CLK = 13; // Arduino static clock pin
 // Display - Set the LCD address to 0x27, 20 and 4 for 20x4 display
 LiquidCrystal_I2C lcd(0x27,20,4);
 
+// SSR Setup
+const int SSR_PIN = 7;
+
 // Button setup variables
 const int BTN_PIN = 3; // Encoder - Button pin
 const int DT = 4;  // Encoder - DT pin (determines direction of rotation)
@@ -167,9 +170,11 @@ void selectOption() {
         heaterOn = !heaterOn;
         if (heaterOn) {
           digitalWrite(11, HIGH); // Turn hot light on
+          digitalWrite(7, HIGH); // Turn heater on
         }
         else {
           digitalWrite(11, LOW); // Turn hot light off
+          digitalWrite(7, LOW); // Turn heater off
         }
         printMenu(HOME);
       }
@@ -195,6 +200,9 @@ void setup() {
   btn.onPress(pressHandler)
   .onDoublePress(pressHandler)     // default timeout
   .onPressFor(pressHandler, 1000); // custom timeout for 1 second
+
+  // Set SSR control pin to output
+  pinMode(7, OUTPUT);
 
   // Set LED control pin to output
   pinMode(11, OUTPUT);
