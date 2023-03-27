@@ -10,9 +10,6 @@ const int CLK = 13; // Arduino static clock pin
 // Display - Set the LCD address to 0x27, 20 and 4 for 20x4 display
 LiquidCrystal_I2C lcd(0x27,20,4);
 
-// SSR Setup
-const int SSR_PIN = 7;
-
 // Button setup variables
 const int BTN_PIN = 3; // Encoder - Button pin
 const int DT = 4;  // Encoder - DT pin (determines direction of rotation)
@@ -21,6 +18,7 @@ int aState;
 int aLastState;
 
 // Thermocouple setup
+float temp0, temp1, tempAvg; 
 const int THERMO_DO = 12;
 const int THERMO_CS_0 = 6;
 const int THERMO_CS_1 = 5;
@@ -70,11 +68,12 @@ void MenuHome () {
 // Menu that shows current temperatures of both sensors,
 // avg temp, and option to go back to home menu
 void MenuTemps () {
-    float temp0 = thermocouple0.readCelsius();
-    float temp1 = thermocouple1.readCelsius();
+    temp0 = thermocouple0.readCelsius();
+    temp1 = thermocouple1.readCelsius();
+    tempAvg = (temp0 + temp1) / 2;
     line0 = "   Temp0: " + String(temp0) + char(0xDF) + "C";
     line1 = "   Temp1: " + String(temp1) + char(0xDF) + "C";
-    line2 = "     Avg: " + String((temp0 + temp1) / 2) + char(0xDF) + "C";
+    line2 = "     Avg: " + String(tempAvg) + char(0xDF) + "C";
     line3 = "  Back";
     selMin = 3;
     selMax = 3;
