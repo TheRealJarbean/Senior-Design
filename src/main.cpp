@@ -24,6 +24,7 @@ int aState;
 int aLastState;
 
 // Thermocouple setup
+float temp0, temp1, avgTemp;
 const int thermoDO = 12;
 const int thermo0CS = 6;
 const int thermo1CS = 5;
@@ -69,9 +70,9 @@ void MenuHome () {
 }
 
 void MenuCycle () {
-    float temp0 = thermocouple0.readCelsius();
-    float temp1 = thermocouple1.readCelsius();
-    float avgTemp = (temp0 + temp1) / 2;
+    temp0 = thermocouple0.readCelsius();
+    temp1 = thermocouple1.readCelsius();
+    avgTemp = (temp0 + temp1) / 2;
     line0 = "--------------------";
     line1 = "  Avg Temp: " + String(avgTemp) + char(0xDF) + "C";
     if (avgTemp >= 180) {
@@ -106,9 +107,9 @@ void MenuManual () {
 }
 
 void MenuTemps () {
-    float temp0 = thermocouple0.readCelsius();
-    float temp1 = thermocouple1.readCelsius();
-    float avgTemp = (temp0 + temp1) / 2;
+    temp0 = thermocouple0.readCelsius();
+    temp1 = thermocouple1.readCelsius();
+    avgTemp = (temp0 + temp1) / 2;
     line0 = "   Temp0:   " + String(temp0) + char(0xDF) + "C";
     line1 = "   Temp1:   " + String(temp1) + char(0xDF) + "C";
     line2 = "     Avg:   " + String(avgTemp) + char(0xDF) + "C";
@@ -291,9 +292,11 @@ void loop() {
     if (refresh) {
       Serial.println("Refreshing menu!");
       printMenu(currentMenu);
-      timeRemaining -= 1;
-      if (timeRemaining == 0) {
-        selectOption(); // Forces selection of the cancel option upon completed cycle, turning off heater
+      if (currentMenu == CYCLE && avgTemp >= 180) { 
+        timeRemaining -= 1;
+        if (timeRemaining == 0) {
+          selectOption(); // Forces selection of the cancel option upon completed cycle, turning off heater
+        }
       }
     }
   }
