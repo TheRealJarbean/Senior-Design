@@ -67,9 +67,9 @@ void MenuHome () {
 void MenuTemps () {
     float temp0 = thermocouple0.readCelsius();
     float temp1 = thermocouple1.readCelsius();
-    line0 = "   Temp0: " + String(temp0) + char(0xDF) + "C";
-    line1 = "   Temp1: " + String(temp1) + char(0xDF) + "C";
-    line2 = "     Avg: " + String((temp0 + temp1) / 2) + char(0xDF) + "C";
+    line0 = "   Temp0:  " + String(temp0) + char(0xDF) + "C";
+    line1 = "   Temp1:  " + String(temp1) + char(0xDF) + "C";
+    line2 = "     Avg:  " + String((temp0 + temp1) / 2) + char(0xDF) + "C";
     line3 = "  Back";
     selMin = 3;
     selMax = 3;
