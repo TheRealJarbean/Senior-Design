@@ -292,6 +292,9 @@ void loop() {
       Serial.println("Refreshing menu!");
       printMenu(currentMenu);
       timeRemaining -= 1;
+      if (timeRemaining == 0) {
+        selectOption(); // Forces selection of the cancel option upon completed cycle, turning off heater
+      }
     }
   }
 }
