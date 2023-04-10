@@ -28,6 +28,7 @@ float temp0, temp1, avgTemp;
 const int thermoDO = 12;
 const int thermo0CS = 6;
 const int thermo1CS = 5;
+const int MELTING_TEMP = 180;
 
 MAX6675 thermocouple0(CLK, thermo0CS, thermoDO);
 MAX6675 thermocouple1(CLK, thermo1CS, thermoDO);
@@ -75,7 +76,7 @@ void MenuCycle () {
     avgTemp = (temp0 + temp1) / 2;
     line0 = "--------------------";
     line1 = "  Avg Temp: " + String(avgTemp) + char(0xDF) + "C";
-    if (avgTemp >= 180) {
+    if (avgTemp >= MELTING_TEMP) {
       int minutes = timeRemaining / 60;
       int seconds = timeRemaining % 60;
       String minutesZero = (minutes < 10) ? "0" : ""; // Add a leading zero if less than 10
@@ -292,7 +293,7 @@ void loop() {
     if (refresh) {
       Serial.println("Refreshing menu!");
       printMenu(currentMenu);
-      if (currentMenu == CYCLE && avgTemp >= 180) { 
+      if (currentMenu == CYCLE && avgTemp >= MELTING_TEMP) { 
         timeRemaining -= 1;
         if (timeRemaining == 0) {
           selectOption(); // Forces selection of the cancel option upon completed cycle, turning off heater
